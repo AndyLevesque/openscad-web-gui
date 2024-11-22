@@ -58,7 +58,7 @@ export default function App() {
             for (const file of files) {
               if (file.name.endsWith('.scad')) {
                 await write(file.download_url, (fileName) => {
-                  return 'scad/' + fileName;
+                  return fileName; // Store under the root folder with only the file name
                 });
               }
             }
