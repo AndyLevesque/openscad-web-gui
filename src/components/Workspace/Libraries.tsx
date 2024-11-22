@@ -16,6 +16,20 @@ export default function Libraries() {
   const { write, isLoading } = useUrlFileWriter();
   const [isAvailable, setAvailable] = React.useState({});
 
+  React.useEffect(() => {
+    const downloadLibraries = async () => {
+      for (const lib of commonLibraries) {
+        if (!isAvailable[lib.url]) {
+          await write(lib.url, (fileName) => {
+            return 'libraries/' + lib.name + fileName.replace(lib.trimFromStartPath, '');
+          });
+          setAvailable((prev) => ({ ...prev, [lib.url]: true }));
+        }
+      }
+    };
+    downloadLibraries();
+  }, []);
+
   const handleDownload = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const url = event.currentTarget.dataset.url;
     const trimFromStartPath = event.currentTarget.dataset.trimFromStartPath;
