@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import React from 'react';
+import axios from 'axios'; // Add axios for HTTP requests
 
 import ErrorBox from './components/ErrorBox';
 import Workspace from './components/Workspace';
@@ -10,6 +11,7 @@ import WorkspaceProvider from './components/providers/WorkspaceProvider';
 import useImport from './hooks/useImport';
 import useUrlFileWriter from './hooks/useUrlFileWriter';
 import commonLibraries from './etc/libraries.json';
+import scadSources from './etc/scad-sources.json'; // Import scad-sources.json
 
 const MyBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -41,6 +43,33 @@ export default function App() {
       }
     };
     downloadLibraries();
+  }, []);
+
+  React.useEffect(() => {
+    const loadScadFiles = async () => {
+      for (const source of scadSources.sources) {
+        if (source.includes('github.com')) {
+          const repoUrl = source.replace('github.com', 'api.github.com/repos');
+          const contentsUrl = `${repoUrl}/contents`;
+
+          try {
+            const response = await axios.get(contentsUrl);
+            const files = response.data;
+
+            for (const file of files) {
+              if (file.name.endsWith('.scad')) {
+                await write(file.download_url, (fileName) => {
+                  return 'scad/' + fileName;
+                });
+              }
+            }
+          } catch (error) {
+            console.error(`Failed to load SCAD files from ${source}:`, error);
+          }
+        }
+      }
+    };
+    loadScadFiles();
   }, []);
 
   // Show a loading indicator during the import.
