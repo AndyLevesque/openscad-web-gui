@@ -2,7 +2,6 @@ import { styled } from '@mui/material';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import React from 'react';
-import axios from 'axios'; // Add axios for HTTP requests
 
 import ErrorBox from './components/ErrorBox';
 import Workspace from './components/Workspace';
@@ -53,8 +52,8 @@ export default function App() {
           const contentsUrl = `${repoUrl}/contents`;
 
           try {
-            const response = await axios.get(contentsUrl);
-            const files = response.data;
+            const response = await fetch(contentsUrl);
+            const files = await response.json();
 
             for (const file of files) {
               if (file.name.endsWith('.scad')) {
