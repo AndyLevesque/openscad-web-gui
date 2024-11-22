@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useFileSystemProvider } from '../components/providers/FileSystemProvider';
 import fonts from '../etc/fonts.json';
 import libraries from '../etc/libraries.json';
+import scadSources from '../etc/scad-sources.json';
 import WorkspaceFile from '../lib/WorkspaceFile';
 import fetcha from '../lib/fetcha';
 import useUrlFileWriter from './useUrlFileWriter';
@@ -19,8 +20,12 @@ export default function useImport(url?: string, autoImport = false) {
 
       try {
         if (!url) {
+          const response = await fetch(scadSources.url);
+          const sources = await response.json();
+          const firstFile = sources[0];
+
           await writeFiles([
-            new WorkspaceFile(['cube([10, 10, 10]);'], 'cube.scad'),
+            new WorkspaceFile([firstFile.content], firstFile.name),
           ]);
           return;
         }
