@@ -19,7 +19,7 @@ export default function Libraries() {
   React.useEffect(() => {
     const downloadLibraries = async () => {
       for (const lib of commonLibraries) {
-        if (!isAvailable[lib.url]) {
+        if (lib.downloadOnInit && !isAvailable[lib.url]) {
           await write(lib.url, (fileName) => {
             return 'libraries/' + lib.name + fileName.replace(lib.trimFromStartPath, '');
           });
