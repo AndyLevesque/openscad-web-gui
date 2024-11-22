@@ -17,7 +17,7 @@ export default function CodeEditor({ disabled }: CodeEditorProps) {
   // Filter out files that start with 'libraries'
   const filteredFiles = files.filter((file) => {
     const normalizedPath = file.path.replace(/\\/g, '/');
-    return !normalizedPath.includes('/libraries/');
+    return !normalizedPath.includes('libraries/');
   });
 
   const handleCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
