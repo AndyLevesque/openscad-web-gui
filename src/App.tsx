@@ -58,7 +58,8 @@ export default function App() {
             for (const file of files) {
               if (file.name.endsWith('.scad')) {
                 await write(file.download_url, (fileName) => {
-                  return fileName; // Store under the root folder with only the file name
+                  const scrubbedFileName = fileName.split('/').pop(); // Scrub the download URL to get only the final filename
+                  return scrubbedFileName;
                 });
               }
             }
