@@ -17,7 +17,7 @@ export default function FileSelector({ onChange, selectedFile }: Props) {
   const { files } = useFileSystemProvider();
   const filteredFiles = files.filter((file) => {
     const extension = file.path.split('.').pop();
-    return visibleExtensions.includes(extension);
+    return visibleExtensions.includes(extension) && !file.path.startsWith('libraries/');
   });
 
   return (
