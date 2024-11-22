@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node esbuild.mjs",
     "corsproxy": "scripts/cors-proxy.js",
-    "dev": "CORSPROXY=http://localhost:8888/ node esbuild.mjs --serve --watch --cors-proxy",
+    "dev": "CORSPROXY=https://corsproxy.io/ node esbuild.mjs --serve --watch --cors-proxy",
     "lint": "eslint . --ext .ts,.tsx",
     "prettier": "prettier . --write",
     "serve": "node esbuild.mjs --serve",
