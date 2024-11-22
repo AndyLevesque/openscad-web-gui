@@ -18,12 +18,12 @@ export default function useImport(url?: string, autoImport = false) {
       setIsLoading(true);
 
       try {
-        if (!url) {
-          await writeFiles([
-            new WorkspaceFile(['cube([10, 10, 10]);'], 'cube.scad'),
-          ]);
-          return;
-        }
+        //if (!url) {
+        //  await writeFiles([
+        //    new WorkspaceFile(['cube([10, 10, 10]);'], 'cube.scad'),
+        //  ]);
+        //  return;
+        //}
 
         // Check if we have it already in our cache
         // TODO
