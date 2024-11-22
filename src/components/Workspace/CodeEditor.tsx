@@ -14,6 +14,9 @@ export default function CodeEditor({ disabled }: CodeEditorProps) {
     useWorkspaceProvider();
   const { files } = useFileSystemProvider();
 
+  // Filter out files that start with 'libraries'
+  const filteredFiles = files.filter((file) => !file.path.startsWith('libraries'));
+
   const handleCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCode(event.target.value);
   };
@@ -36,7 +39,11 @@ export default function CodeEditor({ disabled }: CodeEditorProps) {
         <AlertTitle>Code Editor</AlertTitle>
         Edit the code to your liking.
       </Alert>
-      <FileSelector onChange={handleFileSelect} selectedFile={selectedFile} />
+      <FileSelector
+        onChange={handleFileSelect}
+        selectedFile={selectedFile}
+        files={filteredFiles}
+      />
       <textarea
         readOnly={disabled}
         value={code}
