@@ -21,17 +21,6 @@ const MyBox = styled(Box)(({ theme }) => ({
   maxWidth: '50vw',
 }));
 
-async function loadPublicScadFiles() {
-  try {
-    const response = await fetch('/scad/index.json');
-    const fileList = await response.json();
-    return fileList;
-  } catch (error) {
-    console.error('Failed to load SCAD files index:', error);
-    return [];
-  }
-}
-
 export default function App() {
   const importUrl = getImportUrl();
 
@@ -41,8 +30,7 @@ export default function App() {
   const [isAvailable, setAvailable] = React.useState({});
 
   React.useEffect(() => {
-    const initializeFiles = async () => {
-      // Load libraries
+    const downloadLibraries = async () => {
       for (const lib of commonLibraries) {
         if (lib.downloadOnInit && !isAvailable[lib.url]) {
           await write(lib.url, (fileName) => {
@@ -51,17 +39,9 @@ export default function App() {
           setAvailable((prev) => ({ ...prev, [lib.url]: true }));
         }
       }
-
-      // Load public SCAD files
-      const scadFiles = await loadPublicScadFiles();
-      for (const file of scadFiles) {
-        const response = await fetch(`/scad/${file}`);
-        const content = await response.text();
-        await write(content, () => file);
-      }
     };
-    initializeFiles();
-  }, [write]);
+    downloadLibraries();
+  }, []);
 
   // Show a loading indicator during the import.
   if (isLoading || isWriting) {
