@@ -100,7 +100,7 @@ export default function App() {
 
   return (
     <WorkspaceProvider>
-      <Workspace initialMode={importUrl ? 'customizer' : 'editor'} />
+      <Workspace initialMode={importUrl ? 'editor' : 'editor'} />
     </WorkspaceProvider>
   );
 }
