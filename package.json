@@ -7,7 +7,9 @@
   "scripts": {
     "build": "node esbuild.mjs",
     "corsproxy": "scripts/cors-proxy.js",
-    "dev": "CORSPROXY=https://corsproxy.io/ node esbuild.mjs --serve --watch --cors-proxy",
+    "dev": "run-script-os",
+    "dev:win32": "set CORSPROXY=http://localhost:8080/ && node esbuild.mjs --serve --watch --cors-proxy",
+    "dev:ubuntu": "CORSPROXY=http://localhost:8888/ node esbuild.mjs --serve --watch --cors-proxy",
     "lint": "eslint . --ext .ts,.tsx",
     "prettier": "prettier . --write",
     "serve": "node esbuild.mjs --serve",
@@ -49,6 +51,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "run-script-os": "^1.1.6",
     "three": "^0.163.0"
   }
 }
