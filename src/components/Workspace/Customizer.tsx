@@ -116,7 +116,7 @@ export default function Customizer({ parameters, onChange }: Props) {
                     return (
                       <TextField
                         select
-                        label={parameter.description || parameter.name}
+                        label={parameter.name.replace(/_/g, ' ') + (parameter.description ? `: ${parameter.description}` : '')}
                         fullWidth
                         key={parameter.name}
                         name={parameter.name}
@@ -135,7 +135,7 @@ export default function Customizer({ parameters, onChange }: Props) {
 
                   return (
                     <TextField
-                      label={parameter.description || parameter.name}
+                      label={parameter.name.replace(/_/g, ' ') + (parameter.description ? `: ${parameter.description}` : '')}
                       fullWidth
                       type={parameter.type}
                       key={parameter.name}
@@ -164,7 +164,7 @@ export default function Customizer({ parameters, onChange }: Props) {
                             checked={parameter.value === true}
                           />
                         }
-                        label={parameter.description || parameter.name}
+                        label={parameter.description || parameter.name.replace(/_/g, ' ')}
                       />
                     </FormGroup>
                   );
@@ -186,7 +186,7 @@ export default function Customizer({ parameters, onChange }: Props) {
                     <MuiChipsInput
                       key={parameter.name}
                       fullWidth
-                      label={parameter.description || parameter.name}
+                      label={parameter.description || parameter.name.replace(/_/g, ' ')}
                       onChange={handleAutocompleteChange(parameter.name)}
                       renderChip={(Component, key, chipProps) => {
                         // Rendering the label with a boolean would lead to errors,
