@@ -12,6 +12,7 @@ import useUrlFileWriter from './hooks/useUrlFileWriter';
 import commonLibraries from './etc/libraries.json';
 import scadSources from './etc/scad-sources.json'; // Import scad-sources.json
 
+
 const MyBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
   position: 'absolute',
@@ -43,7 +44,7 @@ export default function App() {
     };
     downloadLibraries();
   }, []);
-
+if(!importUrl){
   React.useEffect(() => {
     const loadScadFiles = async () => {
       for (const source of scadSources.sources) {
@@ -53,6 +54,8 @@ export default function App() {
 
           try {
             const response = await fetch(contentsUrl);
+            const contentType = response.headers.get('Content-Type');
+            console.log('Github response content type:', contentType);
             const files = await response.json();
 
             for (const file of files) {
@@ -71,7 +74,7 @@ export default function App() {
     };
     loadScadFiles();
   }, []);
-
+}
   // Show a loading indicator during the import.
   if (isLoading || isWriting) {
     return (

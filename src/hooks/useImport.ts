@@ -6,6 +6,7 @@ import libraries from '../etc/libraries.json';
 import WorkspaceFile from '../lib/WorkspaceFile';
 import fetcha from '../lib/fetcha';
 import useUrlFileWriter from './useUrlFileWriter';
+import scadSources from '../etc/scad-sources.json'; // Import scad-sources.json
 
 export default function useImport(url?: string, autoImport = false) {
   const { files, writeFiles } = useFileSystemProvider();
@@ -19,9 +20,12 @@ export default function useImport(url?: string, autoImport = false) {
 
       try {
         if (!url) {
-          await writeFiles([
-            new WorkspaceFile(['cube([10, 10, 10]);'], 'cube.scad'),
-          ]);
+            //do nothing if no file is provided
+            /*
+            await writeFiles([
+              new WorkspaceFile(['cube([10, 10, 10]);'], 'cube.scad'),
+            ]);
+            */
           return;
         }
 
