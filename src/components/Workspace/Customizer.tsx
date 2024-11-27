@@ -7,6 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
+import Slider from '@mui/material/Slider';
 import TextField from '@mui/material/TextField';
 import { MuiChipsInput } from 'mui-chips-input';
 import React, { useMemo } from 'react';
@@ -71,6 +72,13 @@ export default function Customizer({ parameters, onChange }: Props) {
     changeParameter(event.target.name, event.target.checked);
   };
 
+  const handleSliderChange = (name: string) => (
+    event: Event,
+    newValue: number | number[]
+  ) => {
+    changeParameter(name, newValue);
+  };
+
   const handleAutocompleteChange = (name) => (newValue?) => {
     changeParameter(name, newValue);
   };
@@ -108,7 +116,31 @@ export default function Customizer({ parameters, onChange }: Props) {
             </AccordionSummary>
             <AccordionDetails>
               {groupParams.map((parameter) => {
-                if (
+                if (parameter.type === 'number' && parameter.range) {
+                  // Render slider with numeric min, max, and current value
+                  return (
+                    <div key={parameter.name} style={{ marginTop: 16, padding: 8 }}>
+                      <label htmlFor={parameter.name}>
+                        {parameter.name.replace(/_/g, ' ')}
+                        {parameter.description ? `: ${parameter.description}` : ''}
+                      </label>
+                      <Slider
+                        name={parameter.name}
+                        value={parameter.value as number}
+                        min={parameter.range.min}
+                        max={parameter.range.max}
+                        step={parameter.range.step}
+                        onChange={handleSliderChange(parameter.name)}
+                        valueLabelDisplay="auto"
+                      />
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span>Min: {parameter.range.min}</span>
+                        <span>Value: {parameter.value}</span>
+                        <span>Max: {parameter.range.max}</span>
+                      </div>
+                    </div>
+                  );
+                } else if (
                   parameter.type === 'number' ||
                   parameter.type === 'string'
                 ) {

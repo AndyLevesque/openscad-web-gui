@@ -144,6 +144,9 @@ export default function parseParameters(script: string): Parameter[] {
         }
       }
 
+      // Log parameter name, type, and range (if applicable)
+      console.log(`Parsed parameter: ${name}, Type: ${typeAndValue.type}, Range: ${range ? JSON.stringify(range) : 'N/A'}`);
+
       // Now search for the comment right above the parameter definition. This is done
       // by splitting the script at the parameter definition and using the last line
       // before the definition.
