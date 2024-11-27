@@ -27,7 +27,7 @@ export default function ThreeJsCanvas({ geometry }: Props) {
       shadows
       camera={{
         fov: 35,
-        zoom: 1.3,
+        zoom: 3,
         near: 0.1,
         far: 1000,
         position: [6, 6, 6],

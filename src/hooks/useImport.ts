@@ -19,9 +19,12 @@ export default function useImport(url?: string, autoImport = false) {
 
       try {
         if (!url) {
-          await writeFiles([
-            new WorkspaceFile(['cube([10, 10, 10]);'], 'cube.scad'),
-          ]);
+            //do nothing if no file is provided
+            /*
+            await writeFiles([
+              new WorkspaceFile(['cube([10, 10, 10]);'], 'cube.scad'),
+            ]);
+            */
           return;
         }
 
