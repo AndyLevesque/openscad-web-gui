@@ -12,7 +12,7 @@
     "dev:ubuntu": "CORSPROXY=http://corsproxy.io/? node esbuild.mjs --serve --watch",
     "lint": "eslint . --ext .ts,.tsx",
     "prettier": "prettier . --write",
-    "serve": "node esbuild.mjs --serve",
+    "serve": "node --stack-size=4096 esbuild.mjs --serve",
     "test": "jest",
     "test:e2e": "cypress run",
     "watch": "node esbuild.mjs --watch"
