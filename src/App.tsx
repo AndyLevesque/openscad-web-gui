@@ -47,27 +47,47 @@ export default function App() {
 if(!importUrl){
   React.useEffect(() => {
     const loadScadFiles = async () => {
+      const fetchScadFiles = async (apiUrl, branch) => {
+        try {
+          const response = await fetch(apiUrl);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const files = await response.json();
+
+          for (const file of files) {
+            if (file.type === 'file' && file.name.endsWith('.scad')) {
+              await write(file.download_url, (fileName) => {
+                const scrubbedFileName = fileName.split('/').pop();
+                return scrubbedFileName;
+              });
+            } else if (file.type === 'dir') {
+              await fetchScadFiles(`${file.url}?ref=${branch}`, branch);
+            }
+          }
+        } catch (error) {
+          console.error(`Failed to load SCAD files from ${apiUrl}:`, error);
+        }
+      };
+
       for (const source of scadSources.sources) {
         if (source.includes('github.com')) {
-          const repoUrl = source.replace('github.com', 'api.github.com/repos');
-          const contentsUrl = `${repoUrl}/contents`;
+          // Parse the GitHub URL to extract owner, repo, branch, and path
+          //TODO Fix errors generated when the directory provided is the root of the repository
+          const githubUrlPattern = /^https:\/\/github\.com\/([^\/]+)\/([^\/]+)(?:\/tree\/([^\/]+)\/?(.*))?$/;
+          const match = source.match(githubUrlPattern);
 
-          try {
-            const response = await fetch(contentsUrl);
-            const contentType = response.headers.get('Content-Type');
-            console.log('Github response content type:', contentType);
-            const files = await response.json();
+          if (match) {
+            const owner = match[1];
+            const repo = match[2];
+            const branch = match[3] || 'main'; // Assume main branch if not defined
+            const path = match[4] || '';
 
-            for (const file of files) {
-              if (file.name.endsWith('.scad')) {
-                await write(file.download_url, (fileName) => {
-                  const scrubbedFileName = fileName.split('/').pop(); // Scrub the download URL to get only the final filename
-                  return scrubbedFileName;
-                });
-              }
-            }
-          } catch (error) {
-            console.error(`Failed to load SCAD files from ${source}:`, error);
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+
+            await fetchScadFiles(apiUrl, branch);
+          } else {
+            console.error(`Invalid GitHub URL: ${source}`);
           }
         }
       }
