@@ -131,11 +131,20 @@ export default function Customizer({ parameters, onChange }: Props) {
         <AlertTitle>Customizer</AlertTitle>
         Adjust the parameters of your design.
       </Alert>
-      <FileSelector
+      <TextField
+        select
+        label="Select File"
+        value={selectedFile}
         onChange={handleFileSelect}
-        selectedFile={selectedFile}
-        files={filteredFiles}
-      />
+        fullWidth
+        sx={{ mb: 2 }}
+      >
+        {filteredFiles.map((file) => (
+          <MenuItem key={file.path} value={file.path}>
+            {file.name.replace(/\.[^/.]+$/, '')}
+          </MenuItem>
+        ))}
+      </TextField>
       {Object.entries(groups)
         .filter((x) => x[0].toLowerCase() !== 'hidden')
         .map(([groupName, groupParams], idx) => (
