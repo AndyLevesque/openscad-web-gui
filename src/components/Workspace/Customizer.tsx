@@ -1,5 +1,5 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Alert, AlertTitle } from '@mui/material';
+import { Alert, AlertTitle, SelectChangeEvent } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -11,6 +11,9 @@ import Slider from '@mui/material/Slider';
 import TextField from '@mui/material/TextField';
 import { MuiChipsInput } from 'mui-chips-input';
 import React, { useMemo } from 'react';
+import { useFileSystemProvider } from '../providers/FileSystemProvider';
+import { useWorkspaceProvider } from '../providers/WorkspaceProvider';
+import FileSelector from './FileSystem/FileSelector';
 
 import { Parameter } from '../../lib/openSCAD/parseParameter';
 
@@ -39,6 +42,27 @@ const validateBoolean = (value) => {
 };
 
 export default function Customizer({ parameters, onChange }: Props) {
+  const { code, setCode, selectedFile, setSelectedFile } = useWorkspaceProvider();
+  const { files } = useFileSystemProvider();
+
+  // Filter out files that start with 'libraries'
+  const filteredFiles = files.filter((file) => {
+    const normalizedPath = file.path.replace(/\\/g, '/');
+    return !normalizedPath.includes('libraries/');
+  });
+
+  // Load the selected file
+  const handleFileSelect = (event: SelectChangeEvent<string>) => {
+    const file = files.find((f) => f.path === event.target.value);
+
+    if (file) {
+      (async () => {
+        setCode(await file.text());
+        setSelectedFile(file.path);
+      })();
+    }
+  };
+
   const changeParameter = (name: string, newValue?) => {
     const newParameters = parameters.map((parameter) => {
       if (parameter.name === name) {
@@ -107,6 +131,11 @@ export default function Customizer({ parameters, onChange }: Props) {
         <AlertTitle>Customizer</AlertTitle>
         Adjust the parameters of your design.
       </Alert>
+      <FileSelector
+        onChange={handleFileSelect}
+        selectedFile={selectedFile}
+        files={filteredFiles}
+      />
       {Object.entries(groups)
         .filter((x) => x[0].toLowerCase() !== 'hidden')
         .map(([groupName, groupParams], idx) => (

@@ -103,7 +103,7 @@ if(!importUrl){
 
   return (
     <WorkspaceProvider>
-      <Workspace initialMode={importUrl ? 'customizer' : 'editor'} />
+      <Workspace initialMode={importUrl ? 'customizer' : 'customizer'} />
     </WorkspaceProvider>
   );
 }
