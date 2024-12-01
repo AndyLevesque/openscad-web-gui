@@ -47,6 +47,15 @@ export default function Customizer({ parameters, onChange }: Props) {
   const { files } = useFileSystemProvider();
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
+  React.useEffect(() => {
+    if (selectedFile) {
+      const file = files.find((f) => f.path === selectedFile);
+      if (file) {
+        document.title = `OpenSCAD Web GUI - ${file.name}`; // Update page title on init
+      }
+    }
+  }, [selectedFile, files]);
+
   // Filter out files that start with 'libraries'
   const filteredFiles = files.filter((file) => {
     const normalizedPath = file.path.replace(/\\/g, '/');
@@ -61,6 +70,7 @@ export default function Customizer({ parameters, onChange }: Props) {
       (async () => {
         setCode(await file.text());
         setSelectedFile(file.path);
+        document.title = `OpenSCAD Web GUI - ${file.name}`; // Update page title
         setSnackbarOpen(true); // Show snackbar
       })();
     }
