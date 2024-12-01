@@ -8,6 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import { MuiChipsInput } from 'mui-chips-input';
 import React, { useMemo } from 'react';
@@ -44,6 +45,7 @@ const validateBoolean = (value) => {
 export default function Customizer({ parameters, onChange }: Props) {
   const { code, setCode, selectedFile, setSelectedFile } = useWorkspaceProvider();
   const { files } = useFileSystemProvider();
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
   // Filter out files that start with 'libraries'
   const filteredFiles = files.filter((file) => {
@@ -59,8 +61,13 @@ export default function Customizer({ parameters, onChange }: Props) {
       (async () => {
         setCode(await file.text());
         setSelectedFile(file.path);
+        setSnackbarOpen(true); // Show snackbar
       })();
     }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   const changeParameter = (name: string, newValue?) => {
@@ -291,6 +298,12 @@ export default function Customizer({ parameters, onChange }: Props) {
             </AccordionDetails>
           </Accordion>
         ))}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message="Click 'Render' to generate the new file"
+      />
     </div>
   );
 }
