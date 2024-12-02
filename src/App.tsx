@@ -42,10 +42,7 @@ export default function App() {
         }
       }
     };
-    downloadLibraries();
-  }, []);
-if(!importUrl){
-  React.useEffect(() => {
+
     const loadScadFiles = async () => {
       const fetchScadFiles = async (apiUrl, branch) => {
         try {
@@ -92,9 +89,17 @@ if(!importUrl){
         }
       }
     };
-    loadScadFiles();
+
+    const init = async () => {
+      await downloadLibraries();
+      if (!importUrl) {
+        await loadScadFiles();
+      }
+    };
+
+    init();
   }, []);
-}
+
   // Show a loading indicator during the import.
   if (isLoading || isWriting) {
     return (
