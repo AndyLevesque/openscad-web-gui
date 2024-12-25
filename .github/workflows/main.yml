@@ -121,7 +121,7 @@ jobs:
           GH_ISSUE_URL: ${{ vars.GH_ISSUE_URL }}
           GH_REPO_URL: ${{ vars.GH_REPO_URL }}
           WEBSITE_URL: ${{ vars.WEBSITE_URL }}
-          CORSPROXY: 'https://corsproxy.io/?'
+          CORSPROXY: 'https://corsproxy.io/?key=108c7d5b&' #TODO remove this and set up proper env val
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
